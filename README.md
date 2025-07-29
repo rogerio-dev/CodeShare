@@ -61,3 +61,25 @@ node C:\caminho\para\CodeShare\cleanup.js
 2. **Exibir Estatísticas**: Mostra total histórico permanente + códigos ativos temporários
 3. **Limpeza Diária**: Remove códigos antigos mas preserva contador histórico
 4. **Persistência**: Total de códigos compartilhados é mantido para sempre
+
+## 📄 Licença
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+## 👨‍💻 Desenvolvedor
+
+**Rogerio Dev**
+- GitHub: [@rogerio-dev](https://github.com/rogerio-dev)
+- Projeto: [CodeShare](https://github.com/rogerio-dev/CodeShare)
+
+## 🤝 Contribuições
+
+Contribuições são bem-vindas! Sinta-se à vontade para:
+- Reportar bugs
+- Sugerir novas funcionalidades  
+- Enviar pull requests
+- Melhorar a documentação
+
+## ⭐ Mostre seu apoio
+
+Se este projeto foi útil para você, considere dar uma ⭐ no repositório!
