@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeShare - Compartilhe e Explore Códigos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <h1>CodeShare</h1>
+            <p>Compartilhe e explore códigos com a comunidade de desenvolvedores</p>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalCodes">0</span>
+                    <span class="stat-label">Códigos Compartilhados</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalLanguages">0</span>
+                    <span class="stat-label">Linguagens</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalUsers">∞</span>
+                    <span class="stat-label">Desenvolvedores</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Form Section -->
+        <section class="form-section">
+            <h2>Compartilhar Código</h2>
+            <form class="code-form" id="codeForm">
+                <div class="form-group">
+                    <label class="form-label" for="codeTitle">Título do Código</label>
+                    <input type="text" id="codeTitle" class="form-input" placeholder="Digite um título descritivo..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="codeLanguage">Linguagem</label>
+                    <select id="codeLanguage" class="form-select" required>
+                        <option value="">Selecione uma linguagem</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="csharp">C#</option>
+                        <option value="cpp">C++</option>
+                        <option value="c">C</option>
+                        <option value="php">PHP</option>
+                        <option value="ruby">Ruby</option>
+                        <option value="go">Go</option>
+                        <option value="rust">Rust</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="sql">SQL</option>
+                        <option value="json">JSON</option>
+                        <option value="xml">XML</option>
+                        <option value="yaml">YAML</option>
+                        <option value="shell">Shell/Bash</option>
+                        <option value="powershell">PowerShell</option>
+                        <option value="other">Outro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="codeEditor">Código</label>
+                    <div id="codeEditor" style="height: 400px; border-radius: 12px; overflow: hidden;"></div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="shareBtn">
+                    🚀 Compartilhar Código
+                </button>
+            </form>
+            
+            <div id="shareResult" style="display: none; margin-top: 1rem; padding: 1rem; background: var(--bg-darker); border-radius: 12px; border: 1px solid var(--green);">
+                <p style="color: var(--green); margin-bottom: 0.5rem;">✅ Código compartilhado com sucesso!</p>
+                <p id="shareLink" style="color: var(--text-secondary);"></p>
+            </div>
+        </section>
+
+        <!-- App Info Section -->
+        <section class="codes-section">
+            <h2>Informações da Aplicação</h2>
+            <div class="app-info-grid">
+                <!-- Privacy Card -->
+                <div class="info-card privacy-card">
+                    <div class="card-header">
+                        <div class="card-icon">🔒</div>
+                        <h3>Privacidade & Segurança</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Seus códigos são tratados com total privacidade. Não coletamos informações pessoais e todos os dados são temporários.</p>
+                        <ul class="feature-list">
+                            <li>✅ Sem coleta de dados pessoais</li>
+                            <li>✅ Compartilhamento anônimo</li>
+                            <li>✅ Links únicos e seguros</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Data Retention Card -->
+                <div class="info-card retention-card">
+                    <div class="card-header">
+                        <div class="card-icon">⏰</div>
+                        <h3>Retenção de Dados</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="retention-highlight">
+                            <div class="retention-time">24 HORAS</div>
+                            <p class="retention-text">Todas as informações registradas são automaticamente apagadas dos nossos bancos de dados após 24 horas.</p>
+                        </div>
+                        <ul class="feature-list">
+                            <li>🗑️ Limpeza automática diária</li>
+                            <li>📝 Códigos temporários</li>
+                            <li>🔄 Sistema auto-renovável</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Features Card -->
+                <div class="info-card features-card">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <h3>Recursos Principais</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Plataforma completa para compartilhamento rápido e eficiente de códigos entre desenvolvedores.</p>
+                        <ul class="feature-list">
+                            <li>🌍 Suporte a 20+ linguagens</li>
+                            <li>🎨 Editor com syntax highlighting</li>
+                            <li>📱 Interface responsiva</li>
+                            <li>🔗 Links únicos de compartilhamento</li>
+                            <li>📋 Cópia com um clique</li>
+                            <li>💾 Download de arquivos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Usage Card -->
+                <div class="info-card usage-card">
+                    <div class="card-header">
+                        <div class="card-icon">🚀</div>
+                        <h3>Como Usar</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="steps-container">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Cole seu código</h4>
+                                    <p>Digite ou cole o código no editor acima</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Escolha a linguagem</h4>
+                                    <p>Selecione a linguagem para syntax highlighting</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Compartilhe</h4>
+                                    <p>Receba um link único para compartilhar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Card -->
+                <div class="info-card stats-card">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <h3>Estatísticas</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="stats-grid">
+                            <div class="stat-item-small">
+                                <div class="stat-value" id="statTotalCodes">0</div>
+                                <div class="stat-label-small">Códigos Ativos</div>
+                            </div>
+                            <div class="stat-item-small">
+                                <div class="stat-value" id="statLanguages">20+</div>
+                                <div class="stat-label-small">Linguagens</div>
+                            </div>
+                            <div class="stat-item-small">
+                                <div class="stat-value">∞</div>
+                                <div class="stat-label-small">Desenvolvedores</div>
+                            </div>
+                            <div class="stat-item-small">
+                                <div class="stat-value">24h</div>
+                                <div class="stat-label-small">Retenção</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tech Stack Card -->
+                <div class="info-card tech-card">
+                    <div class="card-header">
+                        <div class="card-icon">🛠️</div>
+                        <h3>Tecnologias</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="tech-stack">
+                            <div class="tech-item">
+                                <span class="tech-name">Frontend</span>
+                                <span class="tech-desc">Monaco Editor, HTML5, CSS3</span>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-name">Backend</span>
+                                <span class="tech-desc">Node.js, Express.js</span>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-name">Database</span>
+                                <span class="tech-desc">SQL Server Express</span>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-name">Design</span>
+                                <span class="tech-desc">Dracula Theme, Responsive</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <p>Desenvolvido com ❤️ por <strong>Rogerio Dev</strong></p>
+                <a href="https://github.com/rogerio-dev" target="_blank" class="github-link">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    github.com/rogerio-dev
+                </a>
+            </div>
+            <div class="footer-tech">
+                <span class="tech-badge">Node.js</span>
+                <span class="tech-badge">Express</span>
+                <span class="tech-badge">SQL Server</span>
+                <span class="tech-badge">Monaco Editor</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let editor;
+        let codes = [];
+
+        // Initialize Monaco Editor
+        require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' }});
+        require(['vs/editor/editor.main'], function () {
+            // Set Dracula theme for Monaco
+            monaco.editor.defineTheme('dracula', {
+                base: 'vs-dark',
+                inherit: true,
+                rules: [
+                    { token: 'comment', foreground: '6272A4', fontStyle: 'italic' },
+                    { token: 'keyword', foreground: 'FF79C6' },
+                    { token: 'string', foreground: 'F1FA8C' },
+                    { token: 'number', foreground: 'BD93F9' },
+                    { token: 'type', foreground: '8BE9FD' },
+                    { token: 'class', foreground: '50FA7B' },
+                    { token: 'function', foreground: '50FA7B' },
+                    { token: 'variable', foreground: 'F8F8F2' },
+                    { token: 'constant', foreground: 'BD93F9' }
+                ],
+                colors: {
+                    'editor.background': '#0D1117',
+                    'editor.foreground': '#F8F8F2',
+                    'editorLineNumber.foreground': '#6272A4',
+                    'editor.selectionBackground': '#44475A',
+                    'editor.lineHighlightBackground': '#44475A20'
+                }
+            });
+
+            editor = monaco.editor.create(document.getElementById('codeEditor'), {
+                value: '// Digite seu código aqui...\nconsole.log("Hello, CodeShare!");',
+                language: 'javascript',
+                theme: 'dracula',
+                fontSize: 14,
+                fontFamily: 'JetBrains Mono, Fira Code, Consolas, monospace',
+                minimap: { enabled: false },
+                scrollBeyondLastLine: false,
+                wordWrap: 'on',
+                automaticLayout: true
+            });
+
+            // Update editor language when select changes
+            document.getElementById('codeLanguage').addEventListener('change', function() {
+                const language = this.value;
+                if (language && language !== 'other') {
+                    monaco.editor.setModelLanguage(editor.getModel(), language);
+                }
+            });
+
+            // Initialize stats on page load
+            updateStats();
+        });
+
+        // Form submission
+        document.getElementById('codeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('codeTitle').value.trim();
+            const language = document.getElementById('codeLanguage').value;
+            const code = editor.getValue().trim();
+            
+            if (!title || !language || !code) {
+                alert('⚠️ Por favor, preencha todos os campos!');
+                return;
+            }
+            
+            const shareBtn = document.getElementById('shareBtn');
+            const originalText = shareBtn.textContent;
+            shareBtn.textContent = '⏳ Compartilhando...';
+            shareBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/share', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ title, code, language })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Show success message
+                    const resultDiv = document.getElementById('shareResult');
+                    const linkP = document.getElementById('shareLink');
+                    linkP.innerHTML = `<strong>Link:</strong> <a href="${data.url}" target="_blank" style="color: var(--blue); text-decoration: none;">${data.url}</a>`;
+                    resultDiv.style.display = 'block';
+                    
+                    // Reset form
+                    document.getElementById('codeTitle').value = '';
+                    document.getElementById('codeLanguage').value = '';
+                    editor.setValue('// Digite seu código aqui...\n');
+                    
+                    // Update stats
+                    updateStats();
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        resultDiv.style.display = 'none';
+                    }, 5000);
+                } else {
+                    throw new Error(data.error || 'Erro ao compartilhar código');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('❌ Erro ao compartilhar código: ' + error.message);
+            } finally {
+                shareBtn.textContent = originalText;
+                shareBtn.disabled = false;
+            }
+        });
+
+        // Update stats
+        async function updateStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const stats = await response.json();
+                
+                // Update header stats
+                const totalCodesSpan = document.getElementById('totalCodes');
+                const totalLanguagesSpan = document.getElementById('totalLanguages');
+                
+                if (totalCodesSpan) {
+                    totalCodesSpan.textContent = stats.totalCodes;
+                }
+                if (totalLanguagesSpan) {
+                    totalLanguagesSpan.textContent = stats.uniqueLanguages;
+                }
+                
+                // Update stats in info section
+                const statTotalCodes = document.getElementById('statTotalCodes');
+                if (statTotalCodes) {
+                    statTotalCodes.textContent = stats.totalCodes;
+                }
+                
+                // Update language count in info section
+                const statLanguages = document.getElementById('statLanguages');
+                if (statLanguages) {
+                    statLanguages.textContent = stats.uniqueLanguages + '+';
+                }
+                
+                console.log('📊 Estatísticas atualizadas:', stats);
+                
+            } catch (error) {
+                console.error('Erro ao atualizar estatísticas:', error);
+                // Fallback values in case of error
+                const totalCodesSpan = document.getElementById('totalCodes');
+                const statTotalCodes = document.getElementById('statTotalCodes');
+                
+                if (totalCodesSpan) totalCodesSpan.textContent = '0';
+                if (statTotalCodes) statTotalCodes.textContent = '0';
+            }
+        }
+
+        // Initialize stats on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function escapeForJs(text) {
+            return text.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR') + ' às ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('📋 Código copiado para a área de transferência!', 'success');
+            } catch (error) {
+                console.error('Erro ao copiar:', error);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('📋 Código copiado!', 'success');
+            }
+        }
+
+        // Simple toast notification system
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--green);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                font-weight: 500;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Add CSS for toast animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

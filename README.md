@@ -1,0 +1,63 @@
+# CodeShare - Sistema de Compartilhamento de Códigos
+
+## 📊 Sistema de Estatísticas
+
+### Contador Histórico
+- **Total de Códigos**: Mantém o número total de códigos que já foram compartilhados na aplicação
+- **Persistência**: Este contador NUNCA é resetado, mesmo após a limpeza diária de 24h
+- **Localização**: Armazenado na tabela `AppStatistics` no banco de dados
+
+### Códigos Ativos
+- **Códigos Ativos**: Mostra apenas os códigos atualmente disponíveis (últimas 24h)
+- **Limpeza**: Códigos são automaticamente removidos após 24 horas
+- **Localização**: Armazenado na tabela `Snippets` no banco de dados
+
+## 🗄️ Estrutura do Banco de Dados
+
+### Tabela `Snippets`
+```sql
+- Id (INT, IDENTITY)
+- Code (NVARCHAR(MAX))
+- UniqueUrl (NVARCHAR(50))
+- CreatedAt (DATETIME2)
+```
+
+### Tabela `AppStatistics`
+```sql
+- Id (INT, IDENTITY)
+- TotalCodesShared (INT) -- Contador histórico permanente
+- LastUpdated (DATETIME2)
+```
+
+## 🧹 Limpeza Automática
+
+### Script de Limpeza: `cleanup.js`
+- Remove códigos com mais de 24 horas
+- Mantém o contador histórico intacto
+- Pode ser executado manualmente: `node cleanup.js`
+- Recomendado: Agendar execução diária via cron/task scheduler
+
+### Comando para agendamento (Windows Task Scheduler):
+```bash
+node C:\caminho\para\CodeShare\cleanup.js
+```
+
+## 📈 API de Estatísticas
+
+### Endpoint: `GET /api/stats`
+```json
+{
+  "totalCodes": 15,        // Total histórico (nunca diminui)
+  "activeCodes": 3,        // Códigos ativos (últimas 24h)
+  "uniqueLanguages": 5,    // Linguagens detectadas nos códigos ativos
+  "mostRecentCode": {...}, // Último código compartilhado
+  "timestamp": "2025-07-29T22:15:36.599Z"
+}
+```
+
+## ⚡ Funcionamento
+
+1. **Compartilhar Código**: Incrementa contador histórico + adiciona à tabela Snippets
+2. **Exibir Estatísticas**: Mostra total histórico permanente + códigos ativos temporários
+3. **Limpeza Diária**: Remove códigos antigos mas preserva contador histórico
+4. **Persistência**: Total de códigos compartilhados é mantido para sempre
