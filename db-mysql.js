@@ -3,11 +3,11 @@ require('dotenv').config();
 
 // Configuração principal usando variáveis de ambiente
 const config = {
-    host: process.env.DB_SERVER,
-    port: parseInt(process.env.DB_PORT),
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
+    host: process.env.MYSQLHOST || process.env.DB_SERVER,
+    port: parseInt(process.env.MYSQLPORT || process.env.DB_PORT),
+    user: process.env.MYSQLUSER || process.env.DB_USER,
+    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD,
+    database: process.env.MYSQLDATABASE || process.env.DB_DATABASE,
     connectionLimit: 10,
     acquireTimeout: 60000,
     timeout: 60000,
