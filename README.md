@@ -1,100 +1,113 @@
-🚀 CodeShare – Sistema de Compartilhamento de Códigos
-
-# 🚀 CodeShare – Sistema de Compartilhamento de Códigos
+# 🚀 CodeShare - Sistema de Compartilhamento de Códigos
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/rogerio-dev/CodeShare?style=flat-square)
 ![GitHub forks](https://img.shields.io/github/forks/rogerio-dev/CodeShare?style=flat-square)
 ![GitHub last commit](https://img.shields.io/github/last-commit/rogerio-dev/CodeShare?style=flat-square)
 ![GitHub license](https://img.shields.io/github/license/rogerio-dev/CodeShare?style=flat-square)
 ![Node.js](https://img.shields.io/badge/node.js-v16%2B-brightgreen?style=flat-square)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=flat-square)
+![Status](https://img.shields.io/badge/status-ativo-brightgreen?style=flat-square)
 
+Um sistema simples e eficiente para compartilhar trechos de código com estatísticas em tempo real e expiração automática de 24h.
 
-Um sistema simples e eficiente para compartilhar trechos de código com estatísticas em tempo real e expiração automática.
-⚙️ Instalação e Configuração
-✅ Pré-requisitos
+## ✨ Características
 
-    Node.js v16 ou superior
+- 🎨 **Interface Moderna**: Tema Dracula profissional e responsivo
+- 📝 **Editor Avançado**: Monaco Editor com syntax highlighting para 20+ linguagens
+- 📊 **Estatísticas em Tempo Real**: Contador histórico permanente + códigos ativos
+- 🔒 **Privacidade**: Links únicos e seguros, sem coleta de dados pessoais
+- ⏰ **Auto-limpeza**: Remoção automática após 24 horas
+- 📱 **Responsivo**: Funciona perfeitamente em desktop e mobile
 
-    SQL Server Express
+## ⚙️ Instalação e Configuração
 
-    npm ou yarn
+### ✅ Pré-requisitos
 
-🛠️ Passo a passo
+- Node.js v16 ou superior
+- SQL Server Express
+- npm ou yarn
 
-    Clone o repositório:
+### 🛠️ Passo a passo
 
+1. **Clone o repositório:**
+```bash
 git clone https://github.com/rogerio-dev/CodeShare.git
 cd CodeShare
+```
 
-    Instale as dependências:
-
+2. **Instale as dependências:**
+```bash
 npm install
+```
 
-    Configure as variáveis de ambiente:
-
+3. **Configure as variáveis de ambiente:**
+```bash
 cp .env.example .env
+```
 
-    Edite o arquivo .env com suas credenciais:
-
+4. **Edite o arquivo `.env` com suas credenciais:**
+```env
 DB_USER=sa
 DB_PASSWORD=SUA_SENHA_DO_SQL_SERVER
 DB_SERVER=localhost
 DB_PORT=1433
 DB_DATABASE=CodeShare
 PORT=3000
+```
 
-    Execute a aplicação:
-
+5. **Execute a aplicação:**
+```bash
 npm start
+```
 
-📊 Sistema de Estatísticas
-📌 Contador Histórico
+6. **Acesse:** http://localhost:3000
 
-    Total de Códigos: Total acumulado de códigos compartilhados
+## 📊 Sistema de Estatísticas
 
-    Persistência: Nunca é resetado, mesmo com a limpeza diária
+### 📌 Contador Histórico
+- **Total de Códigos**: Total acumulado de códigos compartilhados
+- **Persistência**: Nunca é resetado, mesmo com a limpeza diária
+- **Localização**: Tabela `AppStatistics` no banco de dados
 
-    Local: Tabela AppStatistics no banco de dados
+### ⏳ Códigos Ativos (últimas 24h)
+- **Remoção automática**: Os códigos expiram após 24 horas
+- **Localização**: Tabela `Snippets` no banco de dados
 
-⏳ Códigos Ativos (últimas 24h)
+## 🗄️ Estrutura do Banco de Dados
 
-    Remoção automática: Os códigos expiram após 24 horas
+### 🧾 Tabela `Snippets`
+| Campo | Tipo |
+|-------|------|
+| Id | INT, IDENTITY |
+| Code | NVARCHAR(MAX) |
+| UniqueUrl | NVARCHAR(50) |
+| CreatedAt | DATETIME2 |
 
-    Local: Tabela Snippets no banco de dados
+### 📈 Tabela `AppStatistics`
+| Campo | Tipo |
+|-------|------|
+| Id | INT, IDENTITY |
+| TotalCodesShared | INT |
+| LastUpdated | DATETIME2 |
 
-🗄️ Estrutura do Banco de Dados
-🧾 Tabela Snippets
-Campo	Tipo
-Id	INT, IDENTITY
-Code	NVARCHAR(MAX)
-UniqueUrl	NVARCHAR(50)
-CreatedAt	DATETIME2
-📈 Tabela AppStatistics
-Campo	Tipo
-Id	INT, IDENTITY
-TotalCodesShared	INT
-LastUpdated	DATETIME2
-🧹 Limpeza Automática
+## 🧹 Limpeza Automática
 
-    Script: cleanup.js
-
-    Função: Remove códigos com mais de 24h sem afetar o contador histórico
-
-    Execução manual:
-
+- **Script**: `cleanup.js`
+- **Função**: Remove códigos com mais de 24h sem afetar o contador histórico
+- **Execução manual:**
+```bash
 node cleanup.js
+```
+- **Execução agendada (Windows):**
+```batch
+node C:\caminho\para\CodeShare\cleanup.js
+```
 
-Execução agendada (Windows):
+## 📈 API de Estatísticas
 
-    node C:\caminho\para\CodeShare\cleanup.js
+**Endpoint**: `GET /api/stats`
 
-📈 API de Estatísticas
-
-Endpoint: GET /api/stats
-
-Resposta:
-
+**Resposta:**
+```json
 {
   "totalCodes": 15,
   "activeCodes": 3,
@@ -102,37 +115,42 @@ Resposta:
   "mostRecentCode": { ... },
   "timestamp": "2025-07-29T22:15:36.599Z"
 }
+```
 
-⚡ Funcionamento
+## ⚡ Como Funciona
 
-    Compartilhar Código: Incrementa o total e armazena na tabela Snippets
+1. **Compartilhar Código**: Incrementa o total e armazena na tabela Snippets
+2. **Exibir Estatísticas**: Retorna dados históricos e os códigos ativos atuais
+3. **Limpeza Diária**: Remove registros expirados sem afetar o histórico
+4. **Persistência**: O total de códigos compartilhados é permanente
 
-    Exibir Estatísticas: Retorna dados históricos e os códigos ativos atuais
+## 🛠️ Tecnologias Utilizadas
 
-    Limpeza Diária: Remove registros expirados sem afetar o histórico
+- **Frontend**: HTML5, CSS3, Monaco Editor
+- **Backend**: Node.js, Express.js
+- **Banco de Dados**: SQL Server Express
+- **Design**: Dracula Theme, Responsive Design
+- **Fonte**: JetBrains Mono
 
-    Persistência: O total de códigos compartilhados é permanente
+## 📄 Licença
 
-📄 Licença
+Este projeto está licenciado sob a [Licença MIT](LICENSE).
 
-Este projeto está licenciado sob a Licença MIT.
-👨‍💻 Desenvolvedor
+## 👨‍💻 Desenvolvedor
 
-Rogerio Dev
-🔗 GitHub: @rogerio-dev
-📁 Projeto: CodeShare
-🤝 Contribuições
+**Rogerio Dev**
+- 🔗 GitHub: [@rogerio-dev](https://github.com/rogerio-dev)
+- 📁 Projeto: [CodeShare](https://github.com/rogerio-dev/CodeShare)
+
+## 🤝 Contribuições
 
 Contribuições são sempre bem-vindas!
 
-    Reporte bugs
+- 🐛 Reporte bugs
+- 💡 Sugira melhorias
+- 🔧 Envie pull requests
+- 📚 Ajude a melhorar a documentação
 
-    Sugira melhorias
-
-    Envie pull requests
-
-    Ajude a melhorar a documentação
-
-⭐ Mostre seu apoio
+## ⭐ Mostre seu apoio
 
 Se você gostou do projeto, deixe uma ⭐ no repositório para apoiar o desenvolvimento!
