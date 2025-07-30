@@ -1,124 +1,138 @@
-# CodeShare - Sistema de Compartilhamento de Códigos
+🚀 CodeShare – Sistema de Compartilhamento de Códigos
 
-## � Instalação e Configuração
+# 🚀 CodeShare – Sistema de Compartilhamento de Códigos
 
-### Pré-requisitos
-- Node.js v16+
-- SQL Server Express
-- npm ou yarn
+![GitHub Repo stars](https://img.shields.io/github/stars/rogerio-dev/CodeShare?style=flat-square)
+![GitHub forks](https://img.shields.io/github/forks/rogerio-dev/CodeShare?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/rogerio-dev/CodeShare?style=flat-square)
+![GitHub license](https://img.shields.io/github/license/rogerio-dev/CodeShare?style=flat-square)
+![Node.js](https://img.shields.io/badge/node.js-v16%2B-brightgreen?style=flat-square)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=flat-square)
 
-### Configuração
-1. Clone o repositório:
-```bash
+
+Um sistema simples e eficiente para compartilhar trechos de código com estatísticas em tempo real e expiração automática.
+⚙️ Instalação e Configuração
+✅ Pré-requisitos
+
+    Node.js v16 ou superior
+
+    SQL Server Express
+
+    npm ou yarn
+
+🛠️ Passo a passo
+
+    Clone o repositório:
+
 git clone https://github.com/rogerio-dev/CodeShare.git
 cd CodeShare
-```
 
-2. Instale as dependências:
-```bash
+    Instale as dependências:
+
 npm install
-```
 
-3. Configure as variáveis de ambiente:
-```bash
+    Configure as variáveis de ambiente:
+
 cp .env.example .env
-```
 
-4. Edite o arquivo `.env` com suas credenciais:
-```env
+    Edite o arquivo .env com suas credenciais:
+
 DB_USER=sa
 DB_PASSWORD=SUA_SENHA_DO_SQL_SERVER
 DB_SERVER=localhost
 DB_PORT=1433
 DB_DATABASE=CodeShare
 PORT=3000
-```
 
-5. Execute a aplicação:
-```bash
+    Execute a aplicação:
+
 npm start
-```
 
-## �📊 Sistema de Estatísticas
+📊 Sistema de Estatísticas
+📌 Contador Histórico
 
-### Contador Histórico
-- **Total de Códigos**: Mantém o número total de códigos que já foram compartilhados na aplicação
-- **Persistência**: Este contador NUNCA é resetado, mesmo após a limpeza diária de 24h
-- **Localização**: Armazenado na tabela `AppStatistics` no banco de dados
+    Total de Códigos: Total acumulado de códigos compartilhados
 
-### Códigos Ativos
-- **Códigos Ativos**: Mostra apenas os códigos atualmente disponíveis (últimas 24h)
-- **Limpeza**: Códigos são automaticamente removidos após 24 horas
-- **Localização**: Armazenado na tabela `Snippets` no banco de dados
+    Persistência: Nunca é resetado, mesmo com a limpeza diária
 
-## 🗄️ Estrutura do Banco de Dados
+    Local: Tabela AppStatistics no banco de dados
 
-### Tabela `Snippets`
-```sql
-- Id (INT, IDENTITY)
-- Code (NVARCHAR(MAX))
-- UniqueUrl (NVARCHAR(50))
-- CreatedAt (DATETIME2)
-```
+⏳ Códigos Ativos (últimas 24h)
 
-### Tabela `AppStatistics`
-```sql
-- Id (INT, IDENTITY)
-- TotalCodesShared (INT) -- Contador histórico permanente
-- LastUpdated (DATETIME2)
-```
+    Remoção automática: Os códigos expiram após 24 horas
 
-## 🧹 Limpeza Automática
+    Local: Tabela Snippets no banco de dados
 
-### Script de Limpeza: `cleanup.js`
-- Remove códigos com mais de 24 horas
-- Mantém o contador histórico intacto
-- Pode ser executado manualmente: `node cleanup.js`
-- Recomendado: Agendar execução diária via cron/task scheduler
+🗄️ Estrutura do Banco de Dados
+🧾 Tabela Snippets
+Campo	Tipo
+Id	INT, IDENTITY
+Code	NVARCHAR(MAX)
+UniqueUrl	NVARCHAR(50)
+CreatedAt	DATETIME2
+📈 Tabela AppStatistics
+Campo	Tipo
+Id	INT, IDENTITY
+TotalCodesShared	INT
+LastUpdated	DATETIME2
+🧹 Limpeza Automática
 
-### Comando para agendamento (Windows Task Scheduler):
-```bash
-node C:\caminho\para\CodeShare\cleanup.js
-```
+    Script: cleanup.js
 
-## 📈 API de Estatísticas
+    Função: Remove códigos com mais de 24h sem afetar o contador histórico
 
-### Endpoint: `GET /api/stats`
-```json
+    Execução manual:
+
+node cleanup.js
+
+Execução agendada (Windows):
+
+    node C:\caminho\para\CodeShare\cleanup.js
+
+📈 API de Estatísticas
+
+Endpoint: GET /api/stats
+
+Resposta:
+
 {
-  "totalCodes": 15,        // Total histórico (nunca diminui)
-  "activeCodes": 3,        // Códigos ativos (últimas 24h)
-  "uniqueLanguages": 5,    // Linguagens detectadas nos códigos ativos
-  "mostRecentCode": {...}, // Último código compartilhado
+  "totalCodes": 15,
+  "activeCodes": 3,
+  "uniqueLanguages": 5,
+  "mostRecentCode": { ... },
   "timestamp": "2025-07-29T22:15:36.599Z"
 }
-```
 
-## ⚡ Funcionamento
+⚡ Funcionamento
 
-1. **Compartilhar Código**: Incrementa contador histórico + adiciona à tabela Snippets
-2. **Exibir Estatísticas**: Mostra total histórico permanente + códigos ativos temporários
-3. **Limpeza Diária**: Remove códigos antigos mas preserva contador histórico
-4. **Persistência**: Total de códigos compartilhados é mantido para sempre
+    Compartilhar Código: Incrementa o total e armazena na tabela Snippets
 
-## 📄 Licença
+    Exibir Estatísticas: Retorna dados históricos e os códigos ativos atuais
 
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+    Limpeza Diária: Remove registros expirados sem afetar o histórico
 
-## 👨‍💻 Desenvolvedor
+    Persistência: O total de códigos compartilhados é permanente
 
-**Rogerio Dev**
-- GitHub: [@rogerio-dev](https://github.com/rogerio-dev)
-- Projeto: [CodeShare](https://github.com/rogerio-dev/CodeShare)
+📄 Licença
 
-## 🤝 Contribuições
+Este projeto está licenciado sob a Licença MIT.
+👨‍💻 Desenvolvedor
 
-Contribuições são bem-vindas! Sinta-se à vontade para:
-- Reportar bugs
-- Sugerir novas funcionalidades  
-- Enviar pull requests
-- Melhorar a documentação
+Rogerio Dev
+🔗 GitHub: @rogerio-dev
+📁 Projeto: CodeShare
+🤝 Contribuições
 
-## ⭐ Mostre seu apoio
+Contribuições são sempre bem-vindas!
 
-Se este projeto foi útil para você, considere dar uma ⭐ no repositório!
+    Reporte bugs
+
+    Sugira melhorias
+
+    Envie pull requests
+
+    Ajude a melhorar a documentação
+
+⭐ Mostre seu apoio
+
+Se você gostou do projeto, deixe uma ⭐ no repositório para apoiar o desenvolvimento!
