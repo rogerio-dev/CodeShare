@@ -1,6 +1,45 @@
 # CodeShare - Sistema de Compartilhamento de Códigos
 
-## 📊 Sistema de Estatísticas
+## � Instalação e Configuração
+
+### Pré-requisitos
+- Node.js v16+
+- SQL Server Express
+- npm ou yarn
+
+### Configuração
+1. Clone o repositório:
+```bash
+git clone https://github.com/rogerio-dev/CodeShare.git
+cd CodeShare
+```
+
+2. Instale as dependências:
+```bash
+npm install
+```
+
+3. Configure as variáveis de ambiente:
+```bash
+cp .env.example .env
+```
+
+4. Edite o arquivo `.env` com suas credenciais:
+```env
+DB_USER=sa
+DB_PASSWORD=SUA_SENHA_DO_SQL_SERVER
+DB_SERVER=localhost
+DB_PORT=1433
+DB_DATABASE=CodeShare
+PORT=3000
+```
+
+5. Execute a aplicação:
+```bash
+npm start
+```
+
+## �📊 Sistema de Estatísticas
 
 ### Contador Histórico
 - **Total de Códigos**: Mantém o número total de códigos que já foram compartilhados na aplicação
