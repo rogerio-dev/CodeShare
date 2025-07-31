@@ -7,6 +7,40 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
+// Sistema de limpeza automática
+const scheduleCleanup = () => {
+    const now = new Date();
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0); // Próxima meia-noite
+    
+    const msUntilMidnight = midnight.getTime() - now.getTime();
+    
+    console.log(`🕒 Próxima limpeza automática agendada para: ${midnight.toLocaleString('pt-BR')}`);
+    
+    setTimeout(async () => {
+        await performCleanup();
+        // Reagendar para o próximo dia
+        setInterval(performCleanup, 24 * 60 * 60 * 1000); // 24 horas
+    }, msUntilMidnight);
+};
+
+const performCleanup = async () => {
+    try {
+        console.log('🧹 Iniciando limpeza automática...');
+        
+        const result = await query('DELETE FROM Snippets WHERE CreatedAt < DATE_SUB(NOW(), INTERVAL 24 HOUR)');
+        
+        console.log(`✅ Limpeza concluída! ${result.affectedRows} registros removidos.`);
+        console.log(`🕒 Próxima limpeza: ${new Date(Date.now() + 24 * 60 * 60 * 1000).toLocaleString('pt-BR')}`);
+        
+    } catch (error) {
+        console.error('❌ Erro na limpeza automática:', error);
+    }
+};
+
+// Inicializar sistema de limpeza
+scheduleCleanup();
+
 app.post('/api/share', async (req, res) => {
     const { code } = req.body;
     const urlId = uuidv4().slice(0, 8);
@@ -343,6 +377,66 @@ app.get('/view/:id', async (req, res) => {
 </body>
 </html>
         `);
+    }
+});
+
+// Rota para limpeza manual (útil para testes e administração)
+app.post('/api/cleanup', async (req, res) => {
+    try {
+        console.log('🧹 Limpeza manual solicitada...');
+        
+        const result = await query('DELETE FROM Snippets WHERE CreatedAt < DATE_SUB(NOW(), INTERVAL 24 HOUR)');
+        
+        const response = {
+            success: true,
+            message: 'Limpeza realizada com sucesso',
+            deletedRecords: result.affectedRows,
+            timestamp: new Date().toISOString()
+        };
+        
+        console.log(`✅ Limpeza manual concluída! ${result.affectedRows} registros removidos.`);
+        res.json(response);
+        
+    } catch (error) {
+        console.error('❌ Erro na limpeza manual:', error);
+        res.status(500).json({ 
+            success: false,
+            error: 'Erro ao realizar limpeza',
+            message: error.message 
+        });
+    }
+});
+
+// Rota para verificar status do sistema de limpeza
+app.get('/api/cleanup/status', async (req, res) => {
+    try {
+        // Contar registros expirados (mais de 24h)
+        const expiredResult = await query('SELECT COUNT(*) as expired FROM Snippets WHERE CreatedAt < DATE_SUB(NOW(), INTERVAL 24 HOUR)');
+        const expiredCount = expiredResult[0].expired;
+        
+        // Contar registros ativos (menos de 24h)
+        const activeResult = await query('SELECT COUNT(*) as active FROM Snippets WHERE CreatedAt >= DATE_SUB(NOW(), INTERVAL 24 HOUR)');
+        const activeCount = activeResult[0].active;
+        
+        // Próxima limpeza (próxima meia-noite)
+        const now = new Date();
+        const nextMidnight = new Date();
+        nextMidnight.setHours(24, 0, 0, 0);
+        
+        res.json({
+            activeRecords: activeCount,
+            expiredRecords: expiredCount,
+            nextCleanup: nextMidnight.toISOString(),
+            timeUntilNextCleanup: Math.ceil((nextMidnight.getTime() - now.getTime()) / (1000 * 60 * 60)) + ' horas',
+            systemStatus: 'operational'
+        });
+        
+    } catch (error) {
+        console.error('❌ Erro ao verificar status de limpeza:', error);
+        res.status(500).json({ 
+            error: 'Erro ao verificar status de limpeza',
+            message: error.message 
+        });
     }
 });
 
