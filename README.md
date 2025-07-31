@@ -5,9 +5,13 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/rogerio-dev/CodeShare?style=flat-square)
 ![GitHub license](https://img.shields.io/github/license/rogerio-dev/CodeShare?style=flat-square)
 ![Node.js](https://img.shields.io/badge/node.js-v16%2B-brightgreen?style=flat-square)
+![MySQL](https://img.shields.io/badge/database-MySQL-blue?style=flat-square)
+![Railway](https://img.shields.io/badge/deploy-Railway-purple?style=flat-square)
 ![Status](https://img.shields.io/badge/status-ativo-brightgreen?style=flat-square)
 
 Um sistema simples e eficiente para compartilhar trechos de código com estatísticas em tempo real e expiração automática de 24h.
+
+🌐 **Deploy Live**: [codeshare.com](https://codeshare.com) | [Railway](https://hx8yaqs1.up.railway.app)
 
 ## ✨ Características
 
@@ -17,16 +21,17 @@ Um sistema simples e eficiente para compartilhar trechos de código com estatís
 - 🔒 **Privacidade**: Links únicos e seguros, sem coleta de dados pessoais
 - ⏰ **Auto-limpeza**: Remoção automática após 24 horas
 - 📱 **Responsivo**: Funciona perfeitamente em desktop e mobile
+- ☁️ **Cloud Ready**: Configurado para deploy no Railway com MySQL
 
 ## ⚙️ Instalação e Configuração
 
 ### ✅ Pré-requisitos
 
 - Node.js v16 ou superior
-- SQL Server Express
+- MySQL 8.0+ (local) ou conta Railway (cloud)
 - npm ou yarn
 
-### 🛠️ Passo a passo
+### 🛠️ Desenvolvimento Local
 
 1. **Clone o repositório:**
 ```bash
@@ -39,27 +44,63 @@ cd CodeShare
 npm install
 ```
 
-3. **Configure as variáveis de ambiente:**
+3. **Configure o banco de dados:**
+   - Execute o script `database.sql` no seu MySQL local
+   - Ou use o comando: `mysql -u root -p < database.sql`
+
+4. **Configure as variáveis de ambiente:**
 ```bash
 cp .env.example .env
 ```
 
-4. **Edite o arquivo `.env` com suas credenciais:**
+5. **Edite o arquivo `.env` com suas credenciais:**
 ```env
-DB_USER=sa
-DB_PASSWORD=SUA_SENHA_DO_SQL_SERVER
-DB_SERVER=localhost
-DB_PORT=1433
-DB_DATABASE=CodeShare
+# Configuração MySQL Local
+MYSQLHOST=localhost
+MYSQLPORT=3306
+MYSQLUSER=root
+MYSQLPASSWORD=sua_senha_mysql
+MYSQLDATABASE=CodeShare
+
+# Configuração do servidor
 PORT=3000
 ```
 
-5. **Execute a aplicação:**
+6. **Execute a aplicação:**
 ```bash
 npm start
 ```
 
-6. **Acesse:** http://localhost:3000
+7. **Acesse:** http://localhost:3000
+
+### ☁️ Deploy no Railway
+
+1. **Instale o Railway CLI:**
+```bash
+npm install -g @railway/cli
+```
+
+2. **Faça login no Railway:**
+```bash
+railway login
+```
+
+3. **Crie um novo projeto:**
+```bash
+railway init
+```
+
+4. **Adicione o serviço MySQL:**
+```bash
+railway add --service mysql
+```
+
+5. **Deploy da aplicação:**
+```bash
+railway up
+```
+
+O Railway configurará automaticamente as variáveis de ambiente MySQL (`MYSQLHOST`, `MYSQLPORT`, etc.).
 
 ## 📊 Sistema de Estatísticas
 
@@ -74,33 +115,36 @@ npm start
 
 ## 🗄️ Estrutura do Banco de Dados
 
+O banco de dados é criado automaticamente usando o script `database.sql`. O script já está configurado para MySQL e cria todas as tabelas necessárias.
+
 ### 🧾 Tabela `Snippets`
-| Campo | Tipo |
-|-------|------|
-| Id | INT, IDENTITY |
-| Code | NVARCHAR(MAX) |
-| UniqueUrl | NVARCHAR(50) |
-| CreatedAt | DATETIME2 |
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| Id | INT AUTO_INCREMENT | Chave primária |
+| Code | LONGTEXT | Código compartilhado |
+| UniqueUrl | VARCHAR(50) | URL única do snippet |
+| CreatedAt | TIMESTAMP | Data/hora de criação |
 
 ### 📈 Tabela `AppStatistics`
-| Campo | Tipo |
-|-------|------|
-| Id | INT, IDENTITY |
-| TotalCodesShared | INT |
-| LastUpdated | DATETIME2 |
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| Id | INT AUTO_INCREMENT | Chave primária |
+| TotalCodesShared | INT | Contador total de códigos |
+| LastUpdated | TIMESTAMP | Última atualização |
+
+**Índices criados:**
+- `idx_unique_url` na coluna UniqueUrl (performance)
+- `idx_created_at` na coluna CreatedAt (limpeza automática)
 
 ## 🧹 Limpeza Automática
 
-- **Script**: `cleanup.js`
-- **Função**: Remove códigos com mais de 24h sem afetar o contador histórico
-- **Execução manual:**
-```bash
-node cleanup.js
-```
-- **Execução agendada (Windows):**
-```batch
-node C:\caminho\para\CodeShare\cleanup.js
-```
+O sistema remove automaticamente códigos com mais de 24 horas através de um job interno, preservando o contador histórico na tabela de estatísticas.
+
+**Funcionalidades:**
+- ✅ Remove snippets expirados (>24h)
+- ✅ Preserva contador histórico total
+- ✅ Execução automática a cada hora
+- ✅ Logs de atividade
 
 ## 📈 API de Estatísticas
 
@@ -128,9 +172,39 @@ node C:\caminho\para\CodeShare\cleanup.js
 
 - **Frontend**: HTML5, CSS3, Monaco Editor
 - **Backend**: Node.js, Express.js
-- **Banco de Dados**: SQL Server Express
+- **Banco de Dados**: MySQL 8.0+
+- **Deploy**: Railway Platform
 - **Design**: Dracula Theme, Responsive Design
 - **Fonte**: JetBrains Mono
+
+## 🌐 Variáveis de Ambiente
+
+### Desenvolvimento Local
+```env
+MYSQLHOST=localhost
+MYSQLPORT=3306
+MYSQLUSER=root
+MYSQLPASSWORD=sua_senha
+MYSQLDATABASE=CodeShare
+PORT=3000
+```
+
+### Produção (Railway)
+As variáveis são configuradas automaticamente pelo Railway quando você adiciona o serviço MySQL:
+- `MYSQLHOST` - Host do banco MySQL
+- `MYSQLPORT` - Porta do banco MySQL  
+- `MYSQLUSER` - Usuário do banco MySQL
+- `MYSQLPASSWORD` - Senha do banco MySQL
+- `MYSQLDATABASE` - Nome do banco MySQL
+
+## 🚀 Recursos de Produção
+
+- ✅ **Alta Disponibilidade**: Deploy no Railway com uptime 99.9%
+- ✅ **SSL/HTTPS**: Certificado automático
+- ✅ **Domínio Personalizado**: codeshare.com
+- ✅ **Backup Automático**: MySQL gerenciado pelo Railway
+- ✅ **Monitoramento**: Logs e métricas em tempo real
+- ✅ **Escalabilidade**: Auto-scaling baseado em demanda
 
 ## 📄 Licença
 

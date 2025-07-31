@@ -1,35 +1,31 @@
-const sql = require('mssql');
+const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 // Configuração principal usando variáveis de ambiente
 const config = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    server: process.env.DB_SERVER,
-    port: parseInt(process.env.DB_PORT),
-    database: process.env.DB_DATABASE,
-    options: {
-        encrypt: false,
-        trustServerCertificate: true,
-        enableArithAbort: true
-    },
-    connectionTimeout: 60000,
-    requestTimeout: 60000,
-    pool: {
-        max: 10,
-        min: 0,
-        idleTimeoutMillis: 30000
-    }
+    host: process.env.MYSQLHOST || process.env.DB_SERVER,
+    port: parseInt(process.env.MYSQLPORT || process.env.DB_PORT),
+    user: process.env.MYSQLUSER || process.env.DB_USER,
+    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD,
+    database: process.env.MYSQLDATABASE || process.env.DB_DATABASE,
+    connectionLimit: 10,
+    acquireTimeout: 60000,
+    timeout: 60000,
+    reconnect: true
 };
+
+let pool;
 
 async function connect() {
     try {
-        console.log('🔄 Conectando ao SQL Server...');
-        const pool = await sql.connect(config);
-        console.log('✅ Conexão com SQL Server estabelecida com sucesso!');
+        if (!pool) {
+            console.log('🔄 Conectando ao MySQL...');
+            pool = mysql.createPool(config);
+            console.log('✅ Pool de conexão MySQL criado com sucesso!');
+        }
         return pool;
     } catch (err) {
-        console.error('❌ Erro na conexão com o SQL Server:', err.message);
+        console.error('❌ Erro na conexão com o MySQL:', err.message);
         throw err;
     }
 }
@@ -37,14 +33,26 @@ async function connect() {
 // Função para testar a conexão
 async function testConnection() {
     try {
-        const pool = await connect();
-        const result = await pool.request().query('SELECT GETDATE() as CurrentTime');
-        console.log('🎉 Teste de conexão bem-sucedido:', result.recordset[0]);
+        const connection = await connect();
+        const [rows] = await connection.execute('SELECT NOW() as CurrentTime');
+        console.log('🎉 Teste de conexão MySQL bem-sucedido:', rows[0]);
         return true;
     } catch (err) {
-        console.error('❌ Teste de conexão falhou:', err.message);
+        console.error('❌ Teste de conexão MySQL falhou:', err.message);
         return false;
     }
 }
 
-module.exports = { connect, testConnection };
+// Função para executar queries
+async function query(sql, params = []) {
+    try {
+        const connection = await connect();
+        const [rows] = await connection.execute(sql, params);
+        return rows;
+    } catch (err) {
+        console.error('❌ Erro ao executar query MySQL:', err.message);
+        throw err;
+    }
+}
+
+module.exports = { connect, testConnection, query };

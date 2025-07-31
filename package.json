@@ -4,18 +4,14 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server-mysql.js",
-    "start:sqlserver": "node server.js",
-    "dev": "nodemon server-mysql.js",
-    "dev:sqlserver": "nodemon server.js",
-    "cleanup": "node cleanup.js",
-    "test:mysql": "node test-mysql-connection.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [
     "code-sharing",
     "monaco-editor",
     "express",
-    "sql-server",
+    "mysql",
     "dracula-theme"
   ],
   "author": "Rogerio Dev <rogerio.dev@outlook.com>",
