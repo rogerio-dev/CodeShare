@@ -22,15 +22,15 @@
 ![Railway](https://img.shields.io/badge/deploy-Railway-purple?style=flat-square)
 ![Status](https://img.shields.io/badge/status-ativo-brightgreen?style=flat-square)
 
-Um sistema simples e eficiente para compartilhar trechos de código com estatísticas em tempo real e expiração automática de 24h.
+Um sistema simples e eficiente para compartilhar trechos de código de forma rápida, simples e segura.
 
 ## 📝 Sobre a Mudança de Nome
 
 **CodeShare → PasteShare**
 
-O projeto foi **renomeado de CodeShare para PasteShare** para melhor refletir sua funcionalidade principal de compartilhamento rápido de códigos, similar ao conceito de "paste bins". 
+O projeto foi **renomeado de CodeShare para PasteShare** para melhor refletir sua funcionalidade principal de compartilhamento rápido de códigos.
 
-- **✅ Aplicação:** PasteShare (nome atual)
+- **✅ Aplicação:** PasteShare
 - **✅ Domínio:** www.pasteshare.com.br
 - **📁 Repositório:** Mantém o nome CodeShare para compatibilidade
 - **🗄️ Banco:** Mantém o nome CodeShare para estabilidade
@@ -43,7 +43,7 @@ O projeto foi **renomeado de CodeShare para PasteShare** para melhor refletir su
 - 🔒 **Privacidade**: Links únicos e seguros, sem coleta de dados pessoais
 - ⏰ **Auto-limpeza**: Remoção automática após 24 horas
 - 📱 **Responsivo**: Funciona perfeitamente em desktop e mobile
-- ☁️ **Cloud Ready**: Configurado para deploy no Railway com MySQL
+- ☁️ **Cloud**: Configurado para deploy no Railway
 
 ## ⚙️ Instalação e Configuração
 
@@ -167,10 +167,9 @@ O banco de dados é criado automaticamente usando o script `database.sql`. O scr
 O sistema remove automaticamente códigos com mais de 24 horas através de um job interno, preservando o contador histórico na tabela de estatísticas.
 
 **Funcionalidades:**
-- ✅ Remove snippets expirados (>24h)
+- ✅ Remove compartilhamentos expirados (>24h)
 - ✅ Preserva contador histórico total
-- ✅ Execução automática a cada hora
-- ✅ Logs de atividade
+- ✅ Execução automática sempre as 00h
 
 ## 📈 API de Estatísticas
 
@@ -223,16 +222,7 @@ As variáveis são configuradas automaticamente pelo Railway quando você adicio
 - `MYSQLPASSWORD` - Senha do banco MySQL
 - `MYSQLDATABASE` - Nome do banco MySQL
 
-## 🚀 Recursos de Produção
-
-- ✅ **Alta Disponibilidade**: Deploy no Railway com uptime 99.9%
-- ✅ **SSL/HTTPS**: Certificado automático
-- ✅ **Domínio Personalizado**: pasteshare.com.br
-- ✅ **Backup Automático**: MySQL gerenciado pelo Railway
-- ✅ **Monitoramento**: Logs e métricas em tempo real
-- ✅ **Escalabilidade**: Auto-scaling baseado em demanda
-
-## 📄 Licença
+##  Licença
 
 Este projeto está licenciado sob a [Licença MIT](LICENSE).
 
