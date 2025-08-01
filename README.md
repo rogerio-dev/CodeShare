@@ -1,4 +1,17 @@
-# 🚀 CodeShare - Sistema de Compartilhamento de Códigos
+# 🚀 PasteShare - Sistema de Compartilhamento de Códigos
+
+<div align="center">
+
+## 🌐 **ACESSE A APLICAÇÃO**
+### **[www.pasteshare.com.br](https://www.pasteshare.com.br)**
+
+*Sistema de compartilhamento de códigos online - 100% funcional*
+
+**📝 Nota:** *Aplicação renomeada de CodeShare para PasteShare*
+
+---
+
+</div>
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/rogerio-dev/CodeShare?style=flat-square)
 ![GitHub forks](https://img.shields.io/github/forks/rogerio-dev/CodeShare?style=flat-square)
@@ -11,7 +24,16 @@
 
 Um sistema simples e eficiente para compartilhar trechos de código com estatísticas em tempo real e expiração automática de 24h.
 
-🌐 **Deploy Live**: [codeshare.com](https://codeshare.com) | [Railway](https://hx8yaqs1.up.railway.app)
+## 📝 Sobre a Mudança de Nome
+
+**CodeShare → PasteShare**
+
+O projeto foi **renomeado de CodeShare para PasteShare** para melhor refletir sua funcionalidade principal de compartilhamento rápido de códigos, similar ao conceito de "paste bins". 
+
+- **✅ Aplicação:** PasteShare (nome atual)
+- **✅ Domínio:** www.pasteshare.com.br
+- **📁 Repositório:** Mantém o nome CodeShare para compatibilidade
+- **🗄️ Banco:** Mantém o nome CodeShare para estabilidade
 
 ## ✨ Características
 
@@ -39,6 +61,8 @@ git clone https://github.com/rogerio-dev/CodeShare.git
 cd CodeShare
 ```
 
+> **Nota:** O repositório mantém o nome CodeShare, mas a aplicação foi renomeada para PasteShare.
+
 2. **Instale as dependências:**
 ```bash
 npm install
@@ -65,6 +89,8 @@ MYSQLDATABASE=CodeShare
 # Configuração do servidor
 PORT=3000
 ```
+
+> **Nota:** O banco de dados mantém o nome CodeShare para compatibilidade.
 
 6. **Execute a aplicação:**
 ```bash
@@ -201,7 +227,7 @@ As variáveis são configuradas automaticamente pelo Railway quando você adicio
 
 - ✅ **Alta Disponibilidade**: Deploy no Railway com uptime 99.9%
 - ✅ **SSL/HTTPS**: Certificado automático
-- ✅ **Domínio Personalizado**: codeshare.com
+- ✅ **Domínio Personalizado**: pasteshare.com.br
 - ✅ **Backup Automático**: MySQL gerenciado pelo Railway
 - ✅ **Monitoramento**: Logs e métricas em tempo real
 - ✅ **Escalabilidade**: Auto-scaling baseado em demanda
