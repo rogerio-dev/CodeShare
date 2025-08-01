@@ -301,6 +301,59 @@
                 automaticLayout: true
             });
 
+            // Line limit configuration
+            const MAX_LINES = 500;
+
+            // Function to validate and truncate content
+            function validateLineLimit(content) {
+                const lines = content.split('\n');
+                if (lines.length > MAX_LINES) {
+                    showToast(`⚠️ Eita, muito código! Máximo de ${MAX_LINES} linhas permitidas.`, 'warning');
+                    return lines.slice(0, MAX_LINES).join('\n');
+                }
+                return content;
+            }
+
+            // Listen for content changes and enforce line limit
+            editor.onDidChangeModelContent(function() {
+                const currentContent = editor.getValue();
+                const lines = currentContent.split('\n');
+                
+                if (lines.length > MAX_LINES) {
+                    const truncatedContent = lines.slice(0, MAX_LINES).join('\n');
+                    
+                    // Prevent infinite loop by temporarily removing the listener
+                    const position = editor.getPosition();
+                    editor.setValue(truncatedContent);
+                    
+                    // Restore cursor position (or set to end if beyond limit)
+                    const newLines = truncatedContent.split('\n');
+                    const newPosition = {
+                        lineNumber: Math.min(position.lineNumber, newLines.length),
+                        column: position.lineNumber <= newLines.length ? position.column : newLines[newLines.length - 1].length + 1
+                    };
+                    editor.setPosition(newPosition);
+                    
+                    showToast(`⚠️ Máximo de ${MAX_LINES} linhas atingido!`, 'warning');
+                }
+            });
+
+            // Intercept paste operations
+            editor.onDidPaste(function(e) {
+                const currentContent = editor.getValue();
+                const validatedContent = validateLineLimit(currentContent);
+                
+                if (validatedContent !== currentContent) {
+                    editor.setValue(validatedContent);
+                    // Position cursor at the end
+                    const lines = validatedContent.split('\n');
+                    editor.setPosition({
+                        lineNumber: lines.length,
+                        column: lines[lines.length - 1].length + 1
+                    });
+                }
+            });
+
             // Update editor language when select changes
             document.getElementById('codeLanguage').addEventListener('change', function() {
                 const language = this.value;
@@ -456,11 +509,28 @@
         // Simple toast notification system
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
+            
+            // Set colors based on type
+            let backgroundColor;
+            switch(type) {
+                case 'success':
+                    backgroundColor = 'var(--green)';
+                    break;
+                case 'warning':
+                    backgroundColor = 'var(--yellow)';
+                    break;
+                case 'error':
+                    backgroundColor = 'var(--red)';
+                    break;
+                default:
+                    backgroundColor = 'var(--blue)';
+            }
+            
             toast.style.cssText = `
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: var(--green);
+                background: ${backgroundColor};
                 color: white;
                 padding: 1rem 1.5rem;
                 border-radius: 8px;
@@ -468,6 +538,8 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
                 font-weight: 500;
+                max-width: 400px;
+                word-wrap: break-word;
             `;
             toast.textContent = message;
             document.body.appendChild(toast);
@@ -479,7 +551,7 @@
                         document.body.removeChild(toast);
                     }
                 }, 300);
-            }, 3000);
+            }, 4000); // Increased to 4 seconds for warnings
         }
 
         // Add CSS for toast animations
