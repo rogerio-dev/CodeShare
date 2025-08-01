@@ -178,7 +178,7 @@ app.get('/view/:id', async (req, res) => {
 </head>
 <body>
     <div class="header">
-        <div class="logo">🔥 CodeShare</div>
+        <div class="logo">Código Compartilhado</div>
         <a href="/" class="back-link">← Voltar</a>
     </div>
     <div class="container">
